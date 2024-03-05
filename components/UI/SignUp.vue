@@ -32,42 +32,48 @@ const dataS = ref({
 })
 
 async function sendData(){
-    const validMail = /^\S+@\S+\.\S+$/.test(dataS.value.email)
-    status.value = 'В процессе...'
-    if(validMail){
-        status.value = 'Инициализация...'
-        const { data, error } = await supabase.auth.signUp({
-                email: dataS.value.email,
-                password:  dataS.value.password
-            })
+    try {
+        const validMail = /^\S+@\S+\.\S+$/.test(dataS.value.email)
+        status.value = 'В процессе...'
+        if(validMail){
+            status.value = 'Инициализация...'
+            const { data, error } = await supabase.auth.signUp({
+                    email: dataS.value.email,
+                    password:  dataS.value.password
+                })
 
-        if(!error){
-        
-            await supabase.from('users').insert(
-                {
-                    email:dataS.value.email,
-                    name: 'Пользователь ' +  Math.random().toString(36).substring(7)
-                
-                },
-        )
-
-            await useMyUserStore().getUser()
-            alert('Регистрация прошла успешно')
-            status.value = 'Регистрация прошла успешно'
-            await navigateTo('/')
-            location.reload()
-           
-        }else if(error){
-            throw error
+            if(!error){
             
+                await supabase.from('users').insert(
+                    {
+                        email:dataS.value.email,
+                        name: 'Пользователь ' +  Math.random().toString(36).substring(7)
+                    
+                    },
+            )
+
+                await useMyUserStore().getUser()
+                alert('Регистрация прошла успешно')
+                status.value = 'Регистрация прошла успешно'
+                await navigateTo('/')
+                location.reload()
+            
+            }else if(error){
+                throw error
+                
+            }else{
+                alert('Такой пользователь уже существует')
+                status.value = 'Такой пользователь уже существует'
+            }
         }else{
-            alert('Такой пользователь уже существует')
-            status.value = 'Такой пользователь уже существует'
+            alert('Некорректная почта')
+            status.value = 'Некорректная почта'
         }
-    }else{
-        alert('Некорректная почта')
-        status.value = 'Некорректная почта'
+    } catch (error) {
+        status.value = error
+        throw error
     }
+    
     
 }
 

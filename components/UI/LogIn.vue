@@ -38,7 +38,7 @@ const dataS = ref({
 })
 
 async function login(){
-
+try {
     status.value = 'В процессе...'
     const user = await supabase.auth.getUser()
     status.value = 'Проверка валидности...'
@@ -74,6 +74,11 @@ async function login(){
         status.value = 'Неверный пароль'
 
     }
+} catch (error) {
+    status.value = error
+    throw error
+}
+ 
    
 }
 
