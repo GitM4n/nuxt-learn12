@@ -46,6 +46,8 @@ async function login(){
             email: dataS.value.email,
             password:  dataS.value.password
         })
+
+        console.log(data)
       
         if(error){
             throw new Error(error.message)

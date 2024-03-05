@@ -15,15 +15,16 @@
                                     </div>
                                 </NuxtLink> 
                                 <div class="account" ref="myAccount">
-                                   <div class="account__inner" >
-                                        <p class="account__text text-white font-mono font-bold text-3xl">АККАУНТ</p>
+                                   <div class="account__inner" >  
+                                         <div class="avatar">
+                                            <img v-if="user" class="avatar__img" width="50" height="50" alt="profileImg" :src="user.avatar ? user.avatar : defaultAvatar">
+                                            <p v-else class="account__text text-white font-mono font-bold text-3xl">АККАУНТ</p>
+                                          
+                                         </div>
                                         <Transition name="fade">
                                             <div class="account-hover" v-show="flag">
                                                 <div class="account-hover__inner">
-                                                    <ul class="account-lists" v-if="user">
-                                                        <li class="account-list__li text-green-600">Личный кабинет</li>
-                                                        <li class="account-list__li text-red-600" @click="signOut">Выход</li>
-                                                    </ul>
+                                                    <userProfileCard v-if="user" />
                                                     <NuxtLink to="/auth" v-else>
                                                         <p class="account__login text-green-600 font-mono font-bold text-3xl cursor-pointer text-green-600">Войти</p>
                                                     </NuxtLink>
@@ -36,7 +37,6 @@
                         </div>
                    
                    </div>
-                <button @click="getuser()">CLICK</button>
                 </div>
           
             </header>
@@ -58,10 +58,11 @@
 
 <script setup lang="ts">
 
-import {useHoverEffect} from '~/composables/hoverEffect'
-import {useMyUserStore} from '~/stores/user'
+import defaultAvatar from '~/public/img/defaultAvatar.png'
+import userProfileCard from '~/components/UI/userProfileCard.vue';
 
-const {signOut} = useMyUserStore()
+import {useHoverEffect} from '~/composables/hoverEffect'
+
 
 
 const user = ref(JSON.parse(localStorage.getItem('user')!))
@@ -69,7 +70,7 @@ const user = ref(JSON.parse(localStorage.getItem('user')!))
 const getuser = () => {
     console.log(localStorage.getItem('user'))
 }
-
+console.log(user.value)
 
 const myAccount = ref<HTMLElement>() 
 
@@ -99,19 +100,26 @@ onMounted(()=>{
 
 .main{
     flex: 1 0 100%;
+    position: relative;
+   
 }
 
 .header__inner{
     display: flex;
     justify-content: space-between;
-    padding-top: 15px;
+    align-items: center;
+    padding-top: 5px;
 }
 
 .logo,
-.account,
-.cart-icon{
+.cart-icon,
+.account__text{
     position: relative;
     cursor: pointer;
+}
+
+.account{
+    position: relative;
 }
 
 .logo:hover,
@@ -122,6 +130,7 @@ onMounted(()=>{
 
 .items{
     display: flex;
+    align-items: center;
     gap: 20px;
 }
 
@@ -132,13 +141,16 @@ onMounted(()=>{
     position: absolute;
     z-index: 1;
     top: 100%;
-    width: 150%;
-    left: -25%;
+    width: 200px;
+    right: 0;
     padding: 30px;
     border: 2px solid green;
     border-radius: 10px;
     background-color: aliceblue;
 
+}
+.avatar__img{
+    border-radius: 50%;
 }
 
 .fade-enter-active,

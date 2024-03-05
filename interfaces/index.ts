@@ -23,7 +23,10 @@ interface IUser {
     id:number,
     email:string,
     created_at:string,
-    age?:number | null
+    name?:string | null,
+    age?:number | null,
+    birthday?:string | null
+    avatar?:string | null
   }
 
 export type {

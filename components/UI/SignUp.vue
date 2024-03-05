@@ -5,11 +5,11 @@
             <hr>
             <div class="input-email">
                 <label for="email">ПОЧТА</label>
-                <input type="email" name="email" id="email" v-model="dataS.email">
+                <input type="text" name="email" id="email" v-model="dataS.email">
             </div>
             <div class="input-password">
                 <label for="password">ПАРОЛЬ</label>
-                <input type="password" name="password" id="password"  v-model="dataS.password">
+                <input type="password" name="password" id="password" placeholder="Пароль от 6 символов" minlength="6"  v-model="dataS.password">
             </div>
             <button class="send" type="submit">ОТПРАВИТЬ</button>
         </form>
@@ -30,6 +30,8 @@ const dataS = ref({
 })
 
 async function sendData(){
+    const validMail = /^\S+@\S+\.\S+$/.test(dataS.value.email)
+if(validMail){
     const { data, error } = await supabase.auth.signUp({
             email: dataS.value.email,
             password:  dataS.value.password
@@ -55,6 +57,10 @@ async function sendData(){
     }else{
         alert('Такой пользователь уже существует')
     }
+}else{
+    alert('Некорректная почта')
+}
+    
 }
 
 </script>

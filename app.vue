@@ -77,6 +77,7 @@ onBeforeRouteLeave(() =>{
 
 <style>
 
+
 body:has(.load-indicator),
 body:has(.error) {
   overflow: hidden;

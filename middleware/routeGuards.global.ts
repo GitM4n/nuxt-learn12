@@ -9,6 +9,9 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
             case '/cartPage':
                alert('Авторизуйтесь')
                return navigateTo('/')
+            case '/lk':
+               alert('Авторизуйтесь')
+               return navigateTo('/')
           
          }
       }else{

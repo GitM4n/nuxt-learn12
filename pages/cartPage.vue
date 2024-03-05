@@ -13,17 +13,18 @@
             <p class="cart__empty text-3xl text-red-600 font-mono font-bold" v-else> Ваша корзина пуста</p>
         </div>
          <p class="cart__total text-3xl text-green-600 font-mono font-bold">ИТОГО: {{totalPrice}} руб.</p>
+         <button @click="basket()">SAVE BASKET</button>
     </div>
-<button @click="basket()">SAVE BASKET</button>
+        
   
  </section>
 </template>
 
 <script setup lang="ts">
-import {useCartStore} from '~/stores/cart'
-import cartProduct from '~/components/cartProduct.vue';
+import {useCartStore} from '../stores/cart'
+import cartProduct from '../components/cartProduct.vue';
 
-const cartProducts = reactive(useCartStore().cart)
+const cartProducts = useCartStore().cart
 const totalPrice = useCartStore().totalPrice
 
 
@@ -73,4 +74,20 @@ async function basket(){
     grid-template-columns: 1fr 1fr 1fr 1fr;
     align-items: center;
 }
+
+button{
+    padding: 10px 20px;
+    border: none;
+    border-radius: 10px;
+    background-color: green;
+    color: #fff;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+  
+  button:hover{
+    background-color: rgb(240, 236, 236);
+    color: green;
+  }
 </style>../stores/cart

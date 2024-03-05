@@ -10,7 +10,7 @@
 
 <script lang="ts" setup>
 import { createClient } from '@supabase/supabase-js';
-import { useMyUserStore } from '~/stores/user';
+import { useMyUserStore } from '../stores/user';
 
 const user = useMyUserStore()
 
@@ -41,8 +41,10 @@ async function recoveryPass(){
     console.log(localStorage.getItem('user'))
 
     alert('Пароль изменен')
-    console.log(data)
     localStorage.removeItem('magicLink')
+    useRouter().push('/')
+
+
 }
 
 
