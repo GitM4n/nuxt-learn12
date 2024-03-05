@@ -30,7 +30,7 @@ import { useMyUserStore } from '~/stores/user';
 const cfg = useRuntimeConfig().public
 const supabase = createClient(cfg.supaurl, cfg.supakey)
 const isReset = ref(false)  
-
+const status = ref()
 
 const dataS = ref({
     email:'',
@@ -38,7 +38,10 @@ const dataS = ref({
 })
 
 async function login(){
+
+    status.value = 'В процессе...'
     const user = await supabase.auth.getUser()
+    status.value = 'Проверка валидности...'
     const email = await supabase.from('users').select().filter('email', 'eq', dataS.value.email)
    
     if(email.data![0]){
@@ -54,17 +57,22 @@ async function login(){
         }
         await useMyUserStore().getUser()
         alert('Вы вошли в систему')
+        status.value = 'Вы вошли в систему'
         await navigateTo('/')
         location.reload()
 
 
     }else if(user.data.user){
         alert('Вы уже в системе')
+        status.value = 'Вы уже в системе'
     }else if(email.data?.length === 0){
         alert('Такого пользователя не существует')
+        status.value = 'Такого пользователя не существует'
     }else{
         console.log(email.data, dataS.value, user.data.user)
         alert('Неверный пароль')
+        status.value = 'Неверный пароль'
+
     }
    
 }

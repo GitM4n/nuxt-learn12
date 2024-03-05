@@ -13,7 +13,7 @@
             </div>
             <button class="send" type="submit">ОТПРАВИТЬ</button>
         </form>
-
+        {{ status }}
     </div>
 </template>
 
@@ -24,6 +24,8 @@ import { useMyUserStore } from '~/stores/user';
 const cfg = useRuntimeConfig().public
 const supabase = createClient(cfg.supaurl, cfg.supakey)
 
+const status = ref()
+
 const dataS = ref({
     email:'',
     password:''
@@ -31,35 +33,41 @@ const dataS = ref({
 
 async function sendData(){
     const validMail = /^\S+@\S+\.\S+$/.test(dataS.value.email)
-if(validMail){
-    const { data, error } = await supabase.auth.signUp({
-            email: dataS.value.email,
-            password:  dataS.value.password
-        })
+    status.value = 'В процессе...'
+    if(validMail){
+        status.value = 'Инициализация...'
+        const { data, error } = await supabase.auth.signUp({
+                email: dataS.value.email,
+                password:  dataS.value.password
+            })
 
-    if(!error){
-      
-        await supabase.from('users').insert(
-            {
-                email:dataS.value.email,
-                name: 'Пользователь ' +  Math.random().toString(36).substring(7)
-            
-            },
-       )
-
-        await useMyUserStore().getUser()
-        alert('Регистрация прошла успешно')
-        await navigateTo('/')
-        location.reload()
-    }else if(error){
-        throw error
+        if(!error){
         
+            await supabase.from('users').insert(
+                {
+                    email:dataS.value.email,
+                    name: 'Пользователь ' +  Math.random().toString(36).substring(7)
+                
+                },
+        )
+
+            await useMyUserStore().getUser()
+            alert('Регистрация прошла успешно')
+            status.value = 'Регистрация прошла успешно'
+            await navigateTo('/')
+            location.reload()
+           
+        }else if(error){
+            throw error
+            
+        }else{
+            alert('Такой пользователь уже существует')
+            status.value = 'Такой пользователь уже существует'
+        }
     }else{
-        alert('Такой пользователь уже существует')
+        alert('Некорректная почта')
+        status.value = 'Некорректная почта'
     }
-}else{
-    alert('Некорректная почта')
-}
     
 }
 
