@@ -1,4 +1,5 @@
 **not adapted for mobile devices**
+
 Check
 https://nuxt-learn12.netlify.app/
 
