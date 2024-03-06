@@ -17,7 +17,7 @@
                                 <div class="account" ref="myAccount">
                                    <div class="account__inner" >  
                                          <div class="avatar">
-                                            <img v-if="user" class="avatar__img" width="50" height="50" alt="profileImg" :src="user.avatar ? user.avatar : defaultAvatar">
+                                            <img v-if="user" class="avatar__img"  alt="profileImg" :src="user.avatar ? user.avatar : defaultAvatar">
                                             <p v-else class="account__text text-white font-mono font-bold text-3xl">АККАУНТ</p>
                                           
                                          </div>
@@ -161,6 +161,12 @@ onMounted(()=>{
 
 .account-list__li:hover{
     text-decoration: underline;
+}
+
+.avatar__img{
+    width: 50px;
+    height: 50px;
+    object-fit: cover;
 }
 
 
