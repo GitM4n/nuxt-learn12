@@ -38,7 +38,7 @@ async function sendData(){
         if(validMail){
             status.value = 'Инициализация...'
             const { data, error } = await supabase.auth.signUp({
-                    email: dataS.value.email,
+                    email: dataS.value.email.toLocaleLowerCase(),
                     password:  dataS.value.password
                 })
 
@@ -46,7 +46,7 @@ async function sendData(){
             
                 await supabase.from('users').insert(
                     {
-                        email:dataS.value.email,
+                        email:dataS.value.email.toLocaleLowerCase(),
                         name: 'Пользователь ' +  Math.random().toString(36).substring(7)
                     
                     },
@@ -57,6 +57,8 @@ async function sendData(){
                 status.value = 'Регистрация прошла успешно'
                 await navigateTo('/')
                 location.reload()
+          
+               
             
             }else if(error){
                 throw error

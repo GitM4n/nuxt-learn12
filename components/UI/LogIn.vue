@@ -46,7 +46,7 @@ try {
    
     if(email.data![0]){
         const { data, error } = await supabase.auth.signInWithPassword({
-            email: dataS.value.email,
+            email: dataS.value.email.toLocaleLowerCase(),
             password:  dataS.value.password
         })
 
@@ -60,6 +60,7 @@ try {
         status.value = 'Вы вошли в систему'
         await navigateTo('/')
         location.reload()
+      
 
 
     }else if(user.data.user){

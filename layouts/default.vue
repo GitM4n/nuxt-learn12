@@ -38,7 +38,6 @@
                    
                    </div>
                 </div>
-          
             </header>
             <main class="main">
                 <slot />
@@ -67,9 +66,6 @@ import {useHoverEffect} from '~/composables/hoverEffect'
 
 const user = ref(JSON.parse(localStorage.getItem('user')!))
 
-const getuser = () => {
-    console.log(localStorage.getItem('user'))
-}
 console.log(user.value)
 
 const myAccount = ref<HTMLElement>() 

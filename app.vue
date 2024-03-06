@@ -38,25 +38,23 @@ onMounted(async()=>{
   try {
 
       const {productsLoaded, error} = await productsStore.getProducts()
-      if(localStorage.getItem('user')) await useCartStore().checkAvailableProductFromCart()
-    
 
+    
       if(!localStorage.getItem('user')){
         await userStore.getUser()
       }else{
         userStore.user = JSON.parse(localStorage.getItem('user')!)
-        userStore.userIsLoad = true
+        await useCartStore().checkAvailableProductFromCart()
+    
       }
 
-      if(userStore.userIsLoad && productsLoaded.value) isLoad.value = false
+      if(productsLoaded.value) isLoad.value = false
        
 
   } catch (error) {
-      if(userStore.userIsLoad){
-        isLoad.value = false
-      }else{
-        err.value = true
-      }
+    console.log(error)
+     await userStore.signOut()
+     err.value = true
       
    
   }

@@ -7,37 +7,40 @@ export const useMyUserStore = defineStore('user', () => {
   const cfg = useRuntimeConfig().public;
   const supabase = createClient(cfg.supaurl, cfg.supakey);
 
-  const userIsLoad = ref<boolean>(false)
 
 
 
-    async function getUser () {
-      const userMail = (await supabase.auth.getUser()).data.user?.email;
-      console.log(userMail)
-      if (userMail) {
-        const { data, error } = await supabase
-                                            .from('users')
-                                            .select()
-                                            .eq('email', userMail)
-                                            .single();
-  
-        if(error){
-          throw new Error('Error getting user');
+  const getUser = async () => {
+
+      const userMail = (await supabase.auth.getUser()).data.user?.email
+
+      if(userMail){
+        const {data:userData, error:userError} = await supabase
+                                                          .from('users')
+                                                          .select()
+                                                          .eq('email', userMail)
+                                                          .single()
+                                                         
+                                                          
+        if(userError){
+          alert('Ошибка при синхронизации пользователя с базой данных')
+          throw new Error(userError.message)
         }
-
-        user.value = data
-        localStorage.setItem('user', JSON.stringify(data))
-        userIsLoad.value = true
+       
+        user.value = userData
+        console.log(user.value )
+        localStorage.setItem('user', JSON.stringify(userData))
       
-      }else{
-        userIsLoad.value = true
-        console.log(userIsLoad.value)
-        throw new Error ('No user found');
+       
+
       }
-      
-      
 
-    }
+      
+  }
+
+
+
+
 
     const updateUser = async (payload: IUser) => {
       
@@ -89,6 +92,25 @@ export const useMyUserStore = defineStore('user', () => {
        location.reload()
     }
 
+    async function deleteUser(){
+
+      const { error:deleteError } = await supabase.auth.admin.deleteUser((await supabase.auth.getUser()).data.user?.id!)
+      if(!deleteError){
+        const { error } = await supabase.from('users').delete().eq('id', user.value?.id)
+        if(!error){
+          alert('Пользователь удален')
+          location.reload()
+          navigateTo('/')
+          return
+        }
+        throw error
+        
+      }
+      throw deleteError
+ 
+
+    }
+
 
 
 
@@ -96,13 +118,51 @@ export const useMyUserStore = defineStore('user', () => {
 
 
     return {
-      userIsLoad,
       getUser,
       signOut,
       updateUser,
       changeAvatar,
+      deleteUser,
       user
     };
  
 
 })
+
+
+
+
+/*
+    async function getUser () {
+      const userMail = (await supabase.auth.getUser()).data.user?.email;
+      console.log(userMail)
+      if (userMail) {
+        const { data, error } = await supabase
+                                            .from('users')
+                                            .select()
+                                            .eq('email', userMail)
+                                            .single();
+          console.log(data)
+  
+        if(error){
+          localStorage.clear()
+          console.log(error)
+      
+          throw new Error('Error getting user');
+          
+        }
+
+        user.value = data
+        localStorage.setItem('user', JSON.stringify(data))
+        userIsLoad.value = true
+      
+      }else{
+        userIsLoad.value = true
+        console.log(userIsLoad.value)
+        throw new Error ('No user found');
+      }
+      
+      
+
+    }
+    */

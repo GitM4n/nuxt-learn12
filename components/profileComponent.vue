@@ -6,8 +6,12 @@
     <div class="profile__inner">
     <form action="#" class="profile__form" @submit.prevent>
         <div class="profile__avatar">
-          <p class="profile__avatar_title font-bold">Фон профиля</p>
-          <img width="50" height="50" class="profile__avatar_img" alt="profileImg" :src="user_data.avatar ? user_data.avatar : defaultAvatar" @click="onPickFile">
+          <p class="profile__avatar_title font-bold mb-2">Фон профиля</p>
+          <div class="profile__avatar_wrapper">
+            <div class="profile__avatar_btn">Изменить</div>
+            <img class="profile__avatar_img" alt="profileImg" :src="user_data.avatar ? user_data.avatar : defaultAvatar" @click="onPickFile">
+          </div>
+        
           <input
             type="file"
             style="display: none"
@@ -29,7 +33,7 @@
               <p class="email__text"><span>Почта:</span> {{ user_data.email }}</p>
           </div> 
           <div class="age">
-              <p class="age__text"><span>Возраст:</span> {{ user_data.age }} лет</p>
+              <p class="age__text"><span>Возраст:</span> {{ user_data.age ? user_data.age + 'лет' : 'неизвестно' }} </p>
           </div>
        </fieldset>
       <button @click="updateUser()" type="submit" class="profile__btn">Сохранить изменения</button>
@@ -97,7 +101,7 @@ const getDate = () => {
 
 const updateUser = async () => {
   getDate()
-  user_data.value.avatar = await userStore.changeAvatar(file.value) ?? user_data.value.avatar
+  if(file.value) user_data.value.avatar = await userStore.changeAvatar(file.value) ?? user_data.value.avatar
   const data = await userStore.updateUser(user_data.value)
   if(data){
     alert('Данные обновлены')
@@ -160,10 +164,58 @@ label{
   margin-bottom: 30px;
 }
 
-.profile__avatar_img{
+.profile__avatar_wrapper{
+  position: relative;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
+  overflow: hidden;
+}
+
+.profile__avatar_wrapper::after{
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: radial-gradient(rgba(148, 148, 148, 0.596), rgba(63, 63, 63, 0.5));
+  opacity: 0;
+  transition: opacity 0.5s ease;
+  cursor: pointer;
+}
+
+.profile__avatar_wrapper:hover::after,
+.profile__avatar_wrapper:hover .profile__avatar_btn{
+  opacity: 1;
  
 }
+
+.profile__avatar_img{
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+}
+.profile__avatar_btn{
+  transition: opacity 0.5s ease;
+  opacity: 0;
+  z-index: 2;
+  position: absolute;
+  bottom: 10px;
+  color: #ffffff;
+  font-weight: 600;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+  
+}
+
+
+
+
+
+
+
 
 .profile__data{
   display: flex;
@@ -233,5 +285,20 @@ input[type='date']{
   background-color: rgb(240, 236, 236);
   color: green;
 }
+
+
+
+@media (max-width: 900px) {
+  .profile__avatar_btn{
+    opacity: 1;
+    background-color: black;
+    width: 100%;
+    height: 30%;
+    top: 90%;
+    text-align: center;
+    
+  }
+}
+
 
 </style>

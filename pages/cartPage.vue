@@ -42,7 +42,9 @@ async function basket(){
 
 
 
-
+onMounted(async()=> {
+  await useCartStore().checkAvailableProductFromCart()
+})
 
 
 
