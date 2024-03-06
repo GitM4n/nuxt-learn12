@@ -7,9 +7,9 @@
     <form action="#" class="profile__form" @submit.prevent>
         <div class="profile__avatar">
           <p class="profile__avatar_title font-bold mb-2">Фон профиля</p>
-          <div class="profile__avatar_wrapper">
+          <div class="profile__avatar_wrapper" @click="onPickFile">
             <div class="profile__avatar_btn">Изменить</div>
-            <img class="profile__avatar_img" alt="profileImg" :src="user_data.avatar ? user_data.avatar : defaultAvatar" @click="onPickFile">
+            <img class="profile__avatar_img" alt="profileImg" :src="user_data.avatar ? user_data.avatar : defaultAvatar" >
           </div>
         
           <input
